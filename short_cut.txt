@@ -1,0 +1,28 @@
+One yellow bird:
+    E:/anaconda2021/python.exe g:/ANU2021/3620/code/comp3620-2021-assignment-1/red_bird.py -l search_layouts/mazeSearch.lay
+    layout:
+        aiSearch.lay
+        anuSearch.lay
+        mazeSearch.lay
+    test:
+        anuSearch.lay:
+            E:/anaconda2021/python.exe g:/ANU2021/3620/code/comp3620-2021-assignment-1/red_bird.py -l search_layouts/anuSearch.lay -p SearchAgent -a fn=bfs
+        mazeSearch.lay:
+            E:/anaconda2021/python.exe g:/ANU2021/3620/code/comp3620-2021-assignment-1/red_bird.py -l search_layouts/mazeSearch.lay -p SearchAgent -a fn=bfs
+        aiSearch.lay:
+            E:/anaconda2021/python.exe g:/ANU2021/3620/code/comp3620-2021-assignment-1/red_bird.py -l search_layouts/aiSearch.lay -p SearchAgent -a fn=bfs
+
+    
+
+Many Yellow Birds:
+    layout:
+        aiMultiSearch.lay
+        anuMultiSearch.lay
+        mazeMultiSearch.lay
+        smallMultiSearch.lay
+
+    E:/anaconda2021/python.exe g:/ANU2021/3620/code/comp3620-2021-assignment-1/red_bird.py -l search_layouts/anuMultiSearch.lay
+
+Competing With an Adversary:
+    E:/anaconda2021/python.exe g:/ANU2021/3620/code/comp3620-2021-assignment-1/red_bird.py -l adv_search_layouts/aiAdversarial.lay -n 3
+    E:/anaconda2021/python.exe g:/ANU2021/3620/code/comp3620-2021-assignment-1/red_bird.py -l adv_search_layouts/aiDenseAdversarial.lay -n 3 -b GreedyBlackBirdAgent
