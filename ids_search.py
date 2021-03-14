@@ -13,10 +13,6 @@ from search_problems import SearchProblem
 from search_strategies import SearchNode
 import frontiers
 
-# import sys   
-# sys.setrecursionlimit(100000)
-
-
 
 def solve(problem: SearchProblem) -> List[str]:
     """See 2_implementation_notes.md for more details.
@@ -31,6 +27,8 @@ def solve(problem: SearchProblem) -> List[str]:
         result = Depth_Limited_Search(problem, depth)
         if result[0] != "Cutoff":
             return result[1]
+        else:
+            print(result[2])
         depth = depth + 1
         
 def Depth_Limited_Search(problem, limit):
@@ -38,9 +36,9 @@ def Depth_Limited_Search(problem, limit):
                      for x in range(problem.width) 
                      for y in range(problem.height)])
     
-    return Recursive_DLS(SearchNode(problem.get_initial_state()), problem, limit, explored)
+    return Recursive_DLS(SearchNode(problem.get_initial_state()), problem, limit, explored, 0)
 
-def Recursive_DLS(node, problem, limit, explored):
+def Recursive_DLS(node, problem, limit, explored, L_cost):
     cutoff_occurred = False
     initial_state   = problem.get_initial_state()
     
@@ -53,29 +51,26 @@ def Recursive_DLS(node, problem, limit, explored):
             actions.insert(0, parent_node.action)
             parent_node = parent_node.parent
             
-        return ("Solution", actions)
+        return ("Solution", actions, L_cost)
     
     elif node.depth == limit:
-        return ("Cutoff", [])
+        return ("Cutoff", [], L_cost)
     
     else:
         explored[node.state] = True
-        frontier = []
+        all_cost = 0
         for successor, action, cost in problem.get_successors(node.state):
-            if not (explored[successor]):                 
+            if not (explored[successor]):
+                all_cost = all_cost + 1                 
                 child_node = SearchNode(successor, action, cost, node, node.depth + 1)
-                frontier.append(child_node)
-  
-        for pop_node in frontier:
-            new_explored = explored.copy()
-            result       = Recursive_DLS(pop_node, problem, limit, new_explored)
-            
-            if result[0] == "Solution":
-                return result
-            elif result[0] == "Cutoff":
-                cutoff_occurred = True
-                    
+                new_explored = explored.copy()
+                result       = Recursive_DLS(child_node, problem, limit, new_explored, 0)
+                all_cost = all_cost + result[2]
+                if result[0] == "Solution":
+                    return (result[0], result[1], all_cost)
+                elif result[0] == "Cutoff":
+                    cutoff_occurred = True                
         if cutoff_occurred:
-            return ("Cutoff", [])
+            return ("Cutoff", [], all_cost)
         else:
-            return ("Failure", [])
+            return ("Failure", [], all_cost)

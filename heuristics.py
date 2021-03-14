@@ -67,7 +67,7 @@ def bird_counting_heuristic(state: State,
 
     """ *** YOUR CODE HERE *** """
 
-    return heuristic_value
+    return len(yellow_birds)
 
 
 bch = bird_counting_heuristic
@@ -79,7 +79,11 @@ def every_bird_heuristic(state: State,
     heuristic_value = 0
 
     """ *** YOUR CODE HERE *** """
-
+    
+    first_pos = position
+    for bird_pos in yellow_birds:
+        heuristic_value = heuristic_value + problem.maze_distance(first_pos, bird_pos)
+        first_pos = bird_pos
     return heuristic_value
 
 
