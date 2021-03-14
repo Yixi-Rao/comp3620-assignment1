@@ -13,67 +13,6 @@ from search_problems import SearchProblem
 from search_strategies import SearchNode
 import frontiers
 
-def solve1(problem, heuristic):
-    """
-    Return a list of directions. See handout for more details.
-    :param problem: the starting set up.
-    :param heuristic: a heuristic function.
-    :return: a list of directions.
-    """
-
-    # *** YOUR CODE HERE ***
-
-    # ______________________SET UP
-    from frontiers import PriorityQueue
-    
-    frontier        = PriorityQueue()
-    explored        = set()
-    action_list     = list()
-    g               = dict()  # cost from s0 to current
-    f               = dict()  # g + heuristic to goal
-    previous_action = dict()
-
-    # ____________________________INITIALIZE
-    initial_state    = problem.get_initial_state()
-    g[initial_state] = 0
-    fv               = g[initial_state] + heuristic(initial_state, problem)
-    f[initial_state] = fv
-    back_start       = None # this variable is used for back tracking from the goal to the root. It will be defined as the goal once we hit the goal.
-    
-    frontier.push(initial_state, fv)
-      
-    # ITERATIONS________________________
-    while not frontier.is_empty():
-        node = frontier.peek()
-
-        if problem.goal_test(node):
-            back_start = node
-            break
-
-        node = frontier.pop()
-        explored.add(node)
-
-        for successor, action, cost in problem.get_successors(node):
-            if successor not in explored:
-                g[successor] = g[node] + cost
-                fv           = g[successor] + heuristic(successor, problem)
-
-                if successor not in f.keys():
-                    previous_action[successor] = (node, action)
-                    frontier.push(successor, fv)
-                    f[successor] = fv
-
-                elif f[successor] > fv:
-                    frontier.change_priority(successor, fv)
-                    f[successor] = fv
-                    previous_action[successor] = (node, action)
-
-    while back_start is not initial_state:
-        action_list.append(previous_action[back_start][1])  
-        back_start = previous_action[back_start][0]  
-    return list(reversed(action_list))
-
-
 def solve(problem: SearchProblem, heuristic: Callable) -> List[str]:
     """See 2_implementation_notes.md for more details.
 
