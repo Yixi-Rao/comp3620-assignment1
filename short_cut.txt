@@ -11,18 +11,21 @@ One yellow bird:
             E:/anaconda2021/python.exe g:/ANU2021/3620/code/comp3620-2021-assignment-1/red_bird.py -l search_layouts/mazeSearch.lay -p SearchAgent -a fn=bfs
         aiSearch.lay:
             E:/anaconda2021/python.exe g:/ANU2021/3620/code/comp3620-2021-assignment-1/red_bird.py -l search_layouts/aiSearch.lay -p SearchAgent -a fn=bfs
-
+    A*:
+        E:/anaconda2021/python.exe g:/ANU2021/3620/code/comp3620-2021-assignment-1/red_bird.py -l search_layouts/anuSearch.lay -p SearchAgent -a fn=astar,heuristic=manhattan
     
 
 Many Yellow Birds:
+    E:/anaconda2021/python.exe g:/ANU2021/3620/code/comp3620-2021-assignment-1/red_bird.py -l search_layouts/anuMultiSearch.lay
+    
     layout:
         aiMultiSearch.lay
         anuMultiSearch.lay
         mazeMultiSearch.lay
         smallMultiSearch.lay
 
-    E:/anaconda2021/python.exe g:/ANU2021/3620/code/comp3620-2021-assignment-1/red_bird.py -l search_layouts/anuMultiSearch.lay
-
+    E:/anaconda2021/python.exe g:/ANU2021/3620/code/comp3620-2021-assignment-1/red_bird.py -l search_layouts/aiMultiSearch.lay -p SearchAgent -a fn=astar,prob=MultiplePositionSearchProblem,heuristic=null
+    E:/anaconda2021/python.exe g:/ANU2021/3620/code/comp3620-2021-assignment-1/red_bird.py -l search_layouts/aiMultiSearch.lay -p SearchAgent -a fn=astar,prob=MultiplePositionSearchProblem,heuristic=bch
 Competing With an Adversary:
     E:/anaconda2021/python.exe g:/ANU2021/3620/code/comp3620-2021-assignment-1/red_bird.py -l adv_search_layouts/aiAdversarial.lay -n 3
     E:/anaconda2021/python.exe g:/ANU2021/3620/code/comp3620-2021-assignment-1/red_bird.py -l adv_search_layouts/aiDenseAdversarial.lay -n 3 -b GreedyBlackBirdAgent
