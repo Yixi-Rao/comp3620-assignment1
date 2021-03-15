@@ -26,6 +26,10 @@ Many Yellow Birds:
 
     E:/anaconda2021/python.exe g:/ANU2021/3620/code/comp3620-2021-assignment-1/red_bird.py -l search_layouts/aiMultiSearch.lay -p SearchAgent -a fn=astar,prob=MultiplePositionSearchProblem,heuristic=null
     E:/anaconda2021/python.exe g:/ANU2021/3620/code/comp3620-2021-assignment-1/red_bird.py -l search_layouts/aiMultiSearch.lay -p SearchAgent -a fn=astar,prob=MultiplePositionSearchProblem,heuristic=bch
+    E:/anaconda2021/python.exe g:/ANU2021/3620/code/comp3620-2021-assignment-1/red_bird.py -l search_layouts/aiMultiSearch.lay -p SearchAgent -a fn=astar,prob=MultiplePositionSearchProblem,heuristic=every_bird
 Competing With an Adversary:
     E:/anaconda2021/python.exe g:/ANU2021/3620/code/comp3620-2021-assignment-1/red_bird.py -l adv_search_layouts/aiAdversarial.lay -n 3
     E:/anaconda2021/python.exe g:/ANU2021/3620/code/comp3620-2021-assignment-1/red_bird.py -l adv_search_layouts/aiDenseAdversarial.lay -n 3 -b GreedyBlackBirdAgent
+
+    minimax:
+        E:/anaconda2021/python.exe g:/ANU2021/3620/code/comp3620-2021-assignment-1/red_bird.py -q -p MinimaxAgent -l adv_search_layouts/testAdversarial.lay -a depth=8 -n 100

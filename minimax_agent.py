@@ -7,9 +7,9 @@
 """
     Enter your details below:
 
-    Name:
-    Student ID:
-    Email:
+    Name: yixi rao
+    Student ID: u6826541
+    Email: u6826541@anu.edu.au
 """
 
 from typing import Tuple
@@ -44,26 +44,55 @@ class MinimaxAgent(Agent):
         # *** YOUR CODE GOES HERE ***
 
         return score
-
+    
+    explored = set()
+    
     def maximize(self, problem: AdversarialSearchProblem, state: State,
                  current_depth: int, alpha=float('-inf'), beta=float('inf')) -> Tuple[float, str]:
         """ This method should return a pair (max_utility, max_action).
             The alpha and beta parameters can be ignored if you are
             implementing minimax without alpha-beta pruning.
         """
+        
+        self.explored.add((state[0], state[1] , state[3]))
 
-        raise_not_defined()  # Remove this line once you finished your implementation
-        # *** YOUR CODE GOES HERE ***
+        if problem.terminal_test(state) or current_depth == self.depth:
+            return (self.evaluation(problem, state), "Stop")
 
+        v = float("-inf")
+        select_action = ""
+        for next_state, action, _ in problem.get_successors(state):
+            if (tuple([state[0], next_state[1] , next_state[3]]) not in self.explored):
+                self.explored.add(tuple([state[0], next_state[1] , next_state[3]]))
+                temp_max_v = self.minimize(problem, next_state, current_depth + 1)
+
+                if temp_max_v > v:
+                    v             = temp_max_v
+                    select_action = action
+                    
+        self.explored.clear()        
+        return (v, select_action)
+            
     def minimize(self, problem: AdversarialSearchProblem, state: State,
                  current_depth: int, alpha=float('-inf'), beta=float('inf')) -> float:
         """ This function should just return the minimum utility.
             The alpha and beta parameters can be ignored if you are
             implementing minimax without alpha-beta pruning.
         """
+        self.explored.add((state[0], state[2] , state[3]))
 
-        raise_not_defined()  # Remove this line once you finished your implementation
-        # *** YOUR CODE GOES HERE ***
+        if problem.terminal_test(state) or current_depth == self.depth:
+            return self.evaluation(problem, state)
+
+        v = float("inf")
+        
+        for next_state, _, _ in problem.get_successors(state):
+            if (tuple([state[0], next_state[2] , next_state[3]]) not in self.explored):
+                self.explored.add(tuple([state[0], next_state[2] , next_state[3]]))
+                temp_min_v, _ = self.maximize(problem, next_state, current_depth + 1)
+                if temp_min_v < v:
+                    v = temp_min_v
+        return v
 
     def get_action(self, game_state):
         """ This method is called by the system to solicit an action from
