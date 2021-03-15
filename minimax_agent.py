@@ -45,53 +45,51 @@ class MinimaxAgent(Agent):
 
         return score
     
-    explored = set()
-    
+       
     def maximize(self, problem: AdversarialSearchProblem, state: State,
-                 current_depth: int, alpha=float('-inf'), beta=float('inf')) -> Tuple[float, str]:
+                 current_depth: int, alpha = float('-inf'), beta = float('inf')) -> Tuple[float, str]:
         """ This method should return a pair (max_utility, max_action).
             The alpha and beta parameters can be ignored if you are
             implementing minimax without alpha-beta pruning.
         """
-        
-        self.explored.add((state[0], state[1] , state[3]))
-
-        if problem.terminal_test(state) or current_depth == self.depth:
+        if current_depth == self.depth:
             return (self.evaluation(problem, state), "Stop")
-
+        elif problem.terminal_test(state) or current_depth == self.depth:
+            return (state[4], "Stop")
+        
         v = float("-inf")
         select_action = ""
         for next_state, action, _ in problem.get_successors(state):
-            if (tuple([state[0], next_state[1] , next_state[3]]) not in self.explored):
-                self.explored.add(tuple([state[0], next_state[1] , next_state[3]]))
-                temp_max_v = self.minimize(problem, next_state, current_depth + 1)
-
-                if temp_max_v > v:
-                    v             = temp_max_v
-                    select_action = action
-                    
-        self.explored.clear()        
+            temp_max_v = self.minimize(problem, next_state, current_depth + 1, alpha, beta)
+            if temp_max_v > v:
+                v             = temp_max_v
+                select_action = action
+            if v >= beta:
+                return (v, action)
+            alpha = max(alpha, v)
+                   
         return (v, select_action)
             
     def minimize(self, problem: AdversarialSearchProblem, state: State,
-                 current_depth: int, alpha=float('-inf'), beta=float('inf')) -> float:
+                 current_depth: int, alpha = float('-inf'), beta = float('inf')) -> float:
         """ This function should just return the minimum utility.
             The alpha and beta parameters can be ignored if you are
             implementing minimax without alpha-beta pruning.
         """
-        self.explored.add((state[0], state[2] , state[3]))
 
-        if problem.terminal_test(state) or current_depth == self.depth:
+        if current_depth == self.depth:
             return self.evaluation(problem, state)
+        elif problem.terminal_test(state) or current_depth == self.depth:
+            return state[4]
 
         v = float("inf")
-        
         for next_state, _, _ in problem.get_successors(state):
-            if (tuple([state[0], next_state[2] , next_state[3]]) not in self.explored):
-                self.explored.add(tuple([state[0], next_state[2] , next_state[3]]))
-                temp_min_v, _ = self.maximize(problem, next_state, current_depth + 1)
-                if temp_min_v < v:
-                    v = temp_min_v
+            temp_min_v, _ = self.maximize(problem, next_state, current_depth + 1, alpha, beta)
+            if temp_min_v < v:
+                v = temp_min_v
+                if v <= alpha:
+                    return v
+                beta = min(beta, v)
         return v
 
     def get_action(self, game_state):
