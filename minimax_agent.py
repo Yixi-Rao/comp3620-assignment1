@@ -74,7 +74,7 @@ class MinimaxAgent(Agent):
             The alpha and beta parameters can be ignored if you are
             implementing minimax without alpha-beta pruning.
         """
-        # It is almost the same to the textbook and lecture sides 
+        # It is almost the same to the textbook and lecture slides 
         if current_depth == self.depth:
             return (self.evaluation(problem, state), "Stop")
         elif problem.terminal_test(state) or current_depth == self.depth:
@@ -99,7 +99,7 @@ class MinimaxAgent(Agent):
             The alpha and beta parameters can be ignored if you are
             implementing minimax without alpha-beta pruning.
         """
-        # It is almost the same to the textbook and lecture sides
+        # It is almost the same to the textbook and lecture slides
         if current_depth == self.depth:
             return self.evaluation(problem, state)
         elif problem.terminal_test(state) or current_depth == self.depth:

@@ -27,17 +27,16 @@ def solve(problem: SearchProblem) -> List[str]:
         return []
     frontier = frontiers.Queue()
     frontier.push(initial_node)
-    explored = dict([((x, y), False) 
-                     for x in range(problem.width) 
-                     for y in range(problem.height)])
+    explored = set()
+    # It is almost the same to the textbook and lecture slides 
     while True:
         if frontier.is_empty():
             return []
         node = frontier.pop()
-        explored[node.state] = True
+        explored.add(node.state)
         for successor, action, cost in problem.get_successors(node.state):
             child_node = SearchNode(successor, action, cost, node, node.depth + 1)
-            if not (explored[successor] or frontier.find(lambda x: x.state.__eq__(successor)) != None):
+            if not (successor in explored or frontier.find(lambda x: x.state.__eq__(successor)) != None):
                 if problem.goal_test(successor):
                     parent_node = child_node.parent
                     actions = []

@@ -26,7 +26,7 @@ def solve(problem: SearchProblem, heuristic: Callable) -> List[str]:
     initial_node  = SearchNode(initial_state)
     
     frontier      = frontiers.PriorityQueue()
-    frontier_ele  = {initial_state : initial_node}
+    frontier_ele  = {initial_state : initial_node} # because using this ( frontier.find(lambda x: x.state.__eq__(successor_state)) ) to find an element is very slow
     explored      = set()
     
     frontier.push(initial_node, 0 + heuristic(initial_state, problem))
@@ -35,12 +35,12 @@ def solve(problem: SearchProblem, heuristic: Callable) -> List[str]:
     # --------------------------------------------- find path------------------------------------------
     while not frontier.is_empty():
         node = frontier.pop()
-        frontier_ele.pop(node.state)
+        frontier_ele.pop(node.state)  
         explored.add(node.state)
         
         for successor_state, action, cost in problem.get_successors(node.state): 
             InFrontier_node = frontier_ele[successor_state] if successor_state in frontier_ele else None # InFrontier_node = frontier.find(lambda x: x.state.__eq__(successor_state))
-            
+            # after eating a bird, the state will be different even we are in the same position
             if not (successor_state in explored or InFrontier_node != None):
                 successor_node = SearchNode(successor_state, action, node.path_cost + cost, node, node.depth + 1)
                 if problem.goal_test(successor_state):
@@ -54,7 +54,7 @@ def solve(problem: SearchProblem, heuristic: Callable) -> List[str]:
                 
                 frontier.push(successor_node, successor_node.path_cost + heuristic(successor_state, problem))
                 frontier_ele[successor_state] = successor_node
-                
+            # in the frontier we find some nodes that can be updated    
             elif InFrontier_node != None and (node.path_cost + cost) < InFrontier_node.path_cost:
                 frontier.change_priority(InFrontier_node, node.path_cost + cost + heuristic(successor_state, problem))
                 InFrontier_node.parent = node 

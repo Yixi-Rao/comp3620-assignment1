@@ -72,41 +72,54 @@ def bird_counting_heuristic(state: State,
 
 bch = bird_counting_heuristic
 
-class DisjointSet(dict):
-    '''
-    https://blog.csdn.net/weixin_44193909/article/details/88774567
-    '''
-    def __init__(self, dict):
-        pass
-    
-    def add(self, item):
-        self[item] = item
         
-    def find(self, item):
-        if self[item] != item:
-            self[item] = self.find(self[item])
-        return self[item]
+class My_DisjointSet:
+    '''
+    this disjoint set will be used when we want to calculate a minimal spinning tree value
+    DisjointSet reference: https://blog.csdn.net/weixin_44193909/article/details/88774567
+    '''
+    def __init__(self, l):
+        self.dict = {}
+        for e in l:
+            self.dict[e] = e
     
-    def unionset(self, item1, item2):
-        self[item2] = self[item1]
+    def find(self, ele):
+        '''return the group of the 'ele' element belonged'''
+        if self.dict[ele] != ele:
+            self.dict[ele] = self.find(self.dict[ele])
+        return self.dict[ele]
+    
+    def union_two_set(self, ele1, ele2):
+        '''union two groups into one group, ele1 and ele2 are the group number'''
+        self.dict[ele2] = self.dict[ele1]
+        
+    def same_group(self, v1, v2):
+        '''check whether the two values is in the same group'''
+        return self.find(v1) == self.find(v2)
+        
 
 def every_bird_heuristic(state: State,
                          problem: MultiplePositionSearchProblem) -> float:
+    """This heuristic will return the minimal spinning tree value, and the tree vertice include the red bird and all the yellow birds
+       and it is admissible because the minimal spinning tree value never overestimate the real cost and it is dominate the null and bch. the spnning tree algorithm is Kruskal
+       algorithm
+    """
     
     position, yellow_birds = state
     heuristic_value = 0
 
     """ *** YOUR CODE HERE *** """
-    node_set         = set(yellow_birds)
-    edge_weight_dist = {}
-    edge_queue       = frontiers.PriorityQueue()
-    edge_used        = set()
+    node_set         = set(yellow_birds)         # vertice set
+    edge_weight_dist = {}                        # a 'edge : weight' dictionary
+    edge_queue       = frontiers.PriorityQueue() # PriorityQueue of the minimum value of edges
+    edge_used        = set()                     # used to generate the edges
     node_set.add(position)
+    # adding and initializing the edge
     for bird_pos in yellow_birds:
         maze_dis                               = problem.maze_distance(position, bird_pos)
         edge_weight_dist[(position, bird_pos)] = maze_dis
         edge_queue.push((position, bird_pos), maze_dis)
-       
+
     for bird_pos in yellow_birds:
         edge_used.add(bird_pos)
         for another_bird_pos in yellow_birds:
@@ -115,25 +128,21 @@ def every_bird_heuristic(state: State,
                 edge_weight_dist[(bird_pos, another_bird_pos)] = maze_dis
                 edge_queue.push((bird_pos, another_bird_pos), maze_dis)
                 
-    forest = DisjointSet(node_set)
-    
-    forest.add(position)
-    for bird in node_set:
-        forest.add(bird)
-    
-    num_edges = len(node_set) - 1
+    forest = My_DisjointSet(node_set)
+    # ----------runing the Kruskal algorithm---------------
+    num_edges = len(node_set) - 1 # the number of edge
     while not edge_queue.is_empty():
         v1, v2       = least_edge = edge_queue.pop()
         least_weight = edge_weight_dist[least_edge]
-        subtree1     = forest.find(v1)
-        subtree2     = forest.find(v2)
-        if subtree1 != subtree2:
+        # if the two vertice of the edge not in the same group (also means not in the same tree), we can add the edge to MST
+        if not forest.same_group(v1, v2):
             heuristic_value = heuristic_value + least_weight
             num_edges       = num_edges - 1
             if num_edges == 0:
                 return heuristic_value
             else:
-                forest.unionset(subtree1, subtree2)        
+                # we make the v1 and v2 in the same disjoint set
+                forest.union_two_set(forest.find(v1),  forest.find(v2))        
                 
     return heuristic_value
 
