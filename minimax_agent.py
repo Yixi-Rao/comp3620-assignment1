@@ -17,6 +17,8 @@ from typing import Tuple
 from agents import Agent
 from game_engine.actions import Directions
 from search_problems import AdversarialSearchProblem
+from functools import reduce
+from heuristics import My_DisjointSet,frontiers
 
 Position = Tuple[int, int]
 Positions = Tuple[Position]
@@ -33,8 +35,18 @@ class MinimaxAgent(Agent):
         self.max_player = max_player
         self.depth = int(depth)
 
+        # NW_num_birds = len(list(filter(lambda p: p[0] < self.starting_pos[0] and p[1] > self.starting_pos[1], yellow_birds)))
+        # NE_num_birds = len(list(filter(lambda p: p > self.starting_pos, yellow_birds)))
+        # SW_num_birds = len(list(filter(lambda p: p < self.starting_pos, yellow_birds)))
+        # SE_num_birds = len(list(filter(lambda p: p[0] > self.starting_pos[0] and p[1] < self.starting_pos[1], yellow_birds)))
+
+
+    
+
     def evaluation(self, problem: AdversarialSearchProblem, state: State) -> float:
         """
+            
+            
             (MinimaxAgent, AdversarialSearchProblem,
                 (int, (int, int), (int, int), ((int, int)), number, number))
                     -> number
@@ -42,16 +54,20 @@ class MinimaxAgent(Agent):
         player, red_pos, black_pos, yellow_birds, score, yb_score = state
 
         # *** YOUR CODE GOES HERE ***
-
-        return score
+        
+        average_dis_red   = (sum(map(lambda x : problem.maze_distance(red_pos, x), yellow_birds)))/len(yellow_birds) if len(yellow_birds) != 0 else 0       
+        average_dis_black = (sum(map(lambda x : problem.maze_distance(black_pos, x), yellow_birds))/len(yellow_birds)) if len(yellow_birds) != 0 else 0
+        cloest_distance   = min(map(lambda x : problem.maze_distance(red_pos, x), yellow_birds)) if len(yellow_birds) != 0 else 0
+        return score +  (average_dis_black) - (average_dis_red) - len(yellow_birds) * 2  - cloest_distance * 1.25
     
-       
     def maximize(self, problem: AdversarialSearchProblem, state: State,
-                 current_depth: int, alpha = float('-inf'), beta = float('inf')) -> Tuple[float, str]:
+                current_depth: int, alpha = float('-inf'), beta = float('inf')) -> Tuple[float, str]:
         """ This method should return a pair (max_utility, max_action).
             The alpha and beta parameters can be ignored if you are
             implementing minimax without alpha-beta pruning.
         """
+        if current_depth == 0:
+           self.starting_pos = state[1]
         if current_depth == self.depth:
             return (self.evaluation(problem, state), "Stop")
         elif problem.terminal_test(state) or current_depth == self.depth:

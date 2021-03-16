@@ -1,0 +1,11 @@
+| Maze                  | Depth |       Score        |
+| --------------------- | ----- | ------------------ |
+| testAdversarial       | 12    | 89.10990403396579  |
+| smallAdversarial      | 2     | 92.1877159401      |
+| aiAdversarial         | 10    | 86.87458127689783  |
+| anuAdversarial        | 8     | 27.04926659362006  |
+| mazeAdversarial       | 10    | -58.42531766450133 |
+| smallDenseAdversarial | 6     | 253.882176159401   |
+| aiDenseAdversarial    | 6     | 496.96075810931546 |
+| anuDenseAdversarial   | 6     | -389.0310323686613 |
+| mazeDenseAdversarial  | 6     | 841.8097353433681  |
