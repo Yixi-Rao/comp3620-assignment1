@@ -59,7 +59,7 @@ class MinimaxAgent(Agent):
                 (int, (int, int), (int, int), ((int, int)), number, number))
                     -> number
         """
-        player, red_pos, black_pos, yellow_birds, score, yb_score = state
+        _, red_pos, black_pos, yellow_birds, score, _ = state
 
         # *** YOUR CODE GOES HERE ***
         

@@ -62,8 +62,7 @@ euclidean = euclidean_heuristic
 
 def bird_counting_heuristic(state: State,
                             problem: MultiplePositionSearchProblem) -> float:
-    position, yellow_birds = state
-    heuristic_value = 0
+    _, yellow_birds = state
 
     """ *** YOUR CODE HERE *** """
 
@@ -76,7 +75,6 @@ bch = bird_counting_heuristic
 class My_DisjointSet:
     '''
     this disjoint set will be used when we want to calculate a minimal spinning tree value
-    DisjointSet reference: https://blog.csdn.net/weixin_44193909/article/details/88774567
     '''
     def __init__(self, l):
         self.dict = {}
@@ -146,4 +144,7 @@ def every_bird_heuristic(state: State,
                 
     return heuristic_value
 
+# DisjointSet and Kruskal reference: https://blog.csdn.net/weixin_44193909/article/details/88774567
+
 every_bird = every_bird_heuristic
+
